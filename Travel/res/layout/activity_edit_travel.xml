@@ -1,0 +1,150 @@
+<!-- 
+	Ander Ortega Herrero
+	
+	UAX 002. Desarrollo para el sistema operativo Android
+	Master universitario en ingeniería de desarrollo para aplicaciones móviles
+	Curso 2014-2015. Open UAX. 
+ 
+ 
+ 	He optado por un Relative layout en el que he colocado cuatro Linear layout. 
+ 		Tres horizontales para Ciudad, País y Año
+ 		Uno vertical para Anotación.		
+ 	
+ 	El botón de GUARDAR se muestra alineado con el borde inferior derecho de la pantalla. 
+ 	
+ 	+ Entiendo que lo lógico hubiera sido colocar todos los controles en el Relative layout principal.
+ 	  La razón es simplemente por utilizar dos tipos de layout distintos con fines académicos.
+ 		
+
+ -->
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="es.uax.android.travel.EditTravelActivity" >
+
+    
+    <!-- Ciudad -->
+
+    
+    <LinearLayout 
+        android:id="@+id/linear_ciudad"
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        
+
+    	<TextView
+       		android:id="@+id/textView1"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/ciudad" />
+    
+    	<EditText
+        	android:id="@+id/editCiudad"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:hint="@string/hint_ciudad"
+        	android:inputType="text" />
+      
+       
+       
+    </LinearLayout>
+        
+    <!-- País -->
+    
+    <LinearLayout 
+        android:id="@+id/linear_pais"
+	    android:layout_below="@+id/linear_ciudad"
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+    
+    	<TextView
+        	android:id="@+id/textView2"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+
+        	android:text="@string/pais" />
+    
+    	<EditText
+        	android:id="@+id/editPais"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:hint="@string/hint_pais" 
+        	android:inputType="text" />
+    	
+    
+    </LinearLayout>
+    
+    <!-- Año -->
+
+    <LinearLayout 
+        android:id="@+id/linear_anio"
+        android:layout_below="@+id/linear_pais"
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+    	<TextView
+        	android:id="@+id/textView3"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+
+        	android:text="@string/anio" />
+    	
+    	<EditText
+        	android:id="@+id/editAnio"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:hint="@string/hint_anio" 
+        	android:inputType="text" />
+    	
+    	
+    
+    </LinearLayout>	
+        
+        
+    <!-- Anotación -->
+
+	<LinearLayout 
+	    android:id="@+id/linear_anotacion"
+	    android:layout_below="@+id/linear_anio"	    
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+
+    	<TextView
+       		android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/anotacion" />
+    	
+    	<EditText
+        	android:id="@+id/editAnotacion"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content" 
+        	android:hint="@string/hint_anotacion" 
+        	android:inputType="text" />
+
+
+    </LinearLayout>
+    
+    <!-- Botón GUARDAR -->
+    <Button 
+        android:id="@+id/botonGuardar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/boton_guardar"   
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true" />
+    
+    
+    
+</RelativeLayout>
