@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Travel</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_edit_travel">EditTravelActivity</string>
+
+    <!-- Cadenas para los textos en pantalla de EditTravelActivity -->
+    <string name="ciudad">City</string>
+    <string name="hint_ciudad">What city has visited</string>
+    
+    <string name="pais">Country</string>
+    <string name="hint_pais">In which country</string>
+
+    <string name="anio">Year</string>
+    <string name="hint_anio">When did you went?</string>
+    
+    <string name="anotacion">Annotation</string>
+    <string name="hint_anotacion">You can write here something about this travel</string>
+    <string name="boton_guardar">Save</string>
+    
+    <!-- Cadenas para los textos en pantalla de TravelActivity -->    
+    <string name="abre_parentesis"> (</string>
+    <string name="cierra_parentesis">)</string>
+    
+    <string name="prefijo_anio">Year: </string>
+    
+    
+</resources>
