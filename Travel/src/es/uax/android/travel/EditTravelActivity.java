@@ -41,25 +41,29 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class EditTravelActivity extends Activity {
-
+	
+	EditText editCity;	
+	EditText editCountry;
+	EditText editYear;	
+	EditText editAnnotation;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_edit_travel);
-		
-		 
+				 
 		
 		final Button boton = (Button) findViewById(R.id.botonGuardar);
 		boton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				final EditText editCity = (EditText)findViewById(R.id.editCiudad);
+
+				editCity = (EditText)findViewById(R.id.editCiudad);	
+				editCountry = (EditText)findViewById(R.id.editPais);
+				editYear = (EditText)findViewById(R.id.editAnio);	
+				editAnnotation = (EditText)findViewById(R.id.editAnotacion);
 				String city = editCity.getText().toString();
-				
-				final EditText editCountry = (EditText)findViewById(R.id.editPais);
 				String country = editCountry.getText().toString();
-				
-				final EditText editYear = (EditText)findViewById(R.id.editAnio);
 				String year = editYear.getText().toString();
 				
 				
@@ -90,6 +94,47 @@ public class EditTravelActivity extends Activity {
 	}
 	
 	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		
+		editCity = (EditText)findViewById(R.id.editCiudad);	
+		editCountry = (EditText)findViewById(R.id.editPais);
+		editYear = (EditText)findViewById(R.id.editAnio);	
+		editAnnotation = (EditText)findViewById(R.id.editAnotacion);
+		
+		String city = editCity.getText().toString();
+		String country = editCountry.getText().toString();
+		String year = editYear.getText().toString();
+		String annotation = editAnnotation.getText().toString();
+		
+		outState.putString("ciudad", city);
+		outState.putString("pais", country);
+		outState.putString("anio", year);
+		outState.putString("nota", annotation);
+		
+		super.onSaveInstanceState(outState);
+		
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		
+		
+		
+		if (savedInstanceState != null) {
+			String city = savedInstanceState.getString("ciudad");
+			String country = savedInstanceState.getString("pais");
+			String year = savedInstanceState.getString("anio");
+			String annotation = savedInstanceState.getString("nota");
+			
+			editCity.setText(city);
+			editCountry.setText(country);
+			editYear.setText(year);
+			editAnnotation.setText(annotation);
+		}
+		
+		super.onRestoreInstanceState(savedInstanceState);
+	}
 
 		
 }
