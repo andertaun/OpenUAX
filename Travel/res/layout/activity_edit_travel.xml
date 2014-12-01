@@ -1,11 +1,10 @@
 <!-- 
-	Ander Ortega Herrero
-	
-	UAX 002. Desarrollo para el sistema operativo Android
-	Master universitario en ingeniería de desarrollo para aplicaciones móviles
-	Curso 2014-2015. Open UAX. 
- 
- 
+   Ander Ortega Herrero.
+  		Ejercicio: Unidad 3. Ejercicio Feedback 1.
+  		Asignatura: UAX 002 - Desarrollo para el sistema operativo Android.
+    	Curso: MASTER UNIVERSITARIO EN INGENIERIA DE DESARROLLO PARA DISPOSITIVOS MOVILES.
+ 		OpenUAX. CURSO 2014-2015.
+  
  	He optado por un Relative layout en el que he colocado cuatro Linear layout. 
  		Tres horizontales para Ciudad, País y Año
  		Uno vertical para Anotación.		
@@ -15,7 +14,6 @@
  	+ Entiendo que lo lógico hubiera sido colocar todos los controles en el Relative layout principal.
  	  La razón es simplemente por utilizar dos tipos de layout distintos con fines académicos.
  		
-
  -->
 
 
