@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Travel</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_edit_travel">EditTravelActivity</string>
+    <string name="app_name">Travel List</string>
+    <string name="title_activity_travel_list">TravelListActivity</string>
 
-    <!-- Cadenas para los textos en pantalla de EditTravelActivity -->
+    <string name="title_activity_edit_travel">EditTravelActivity</string>
+   
+    <string name="action_settings">Settings</string>
+    <string name="compartir">Compartir</string>
+    <string name="menu_new_travel">Nuevo viaje</string>
+    
+    
+<!-- Cadenas para los textos en pantalla de EditTravelActivity -->
+
     <string name="ciudad">Ciudad</string>
     <string name="hint_ciudad">Qué ciudad has visitado</string>
     
@@ -19,7 +26,8 @@
     <string name="hint_anotacion">Aquí puedes escribir algún comentario sobre el viaje</string>
     <string name="boton_guardar">Guardar</string>
     
-    <!-- Cadenas para los textos en pantalla de TravelActivity -->    
+<!-- Cadenas para los textos en pantalla de TravelActivity -->    
+
     <string name="abre_parentesis"> (</string>
     <string name="cierra_parentesis">)</string>
     

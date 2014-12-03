@@ -32,6 +32,7 @@
 package es.uax.android.travel;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,21 +41,27 @@ import android.widget.TextView;
 
 public class TravelActivity extends Activity {
 
+	TextView viaje_ciudad;
+	TextView viaje_pais;
+	TextView viaje_anio;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel);
         
-        /* Viaje creado manualente para esta entrega */
+        /* Los datos del Viaje se obtienen del intent de TravelListActivity (elemento en la lista seleccionado) */
         
-        final TextView ciudad = (TextView) findViewById(R.id.viaje_ciudad);
-        ciudad.setText("Kyoto");
+        Bundle bundle = getIntent().getExtras();
         
-        final TextView viaje_pais = (TextView) findViewById(R.id.viaje_pais);
-        viaje_pais.setText("Japón");
+        viaje_ciudad = (TextView) findViewById(R.id.viaje_ciudad);
+        viaje_ciudad.setText(bundle.getString("CITY"));
         
-        final TextView viaje_anio = (TextView) findViewById(R.id.viaje_anio);
-        viaje_anio.setText("2012");
+        viaje_pais = (TextView) findViewById(R.id.viaje_pais);
+        viaje_pais.setText(bundle.getString("COUNTRY"));
+        
+        viaje_anio = (TextView) findViewById(R.id.viaje_anio);
+        viaje_anio.setText(String.valueOf(bundle.getInt("YEAR")));
         
         
         
@@ -73,10 +80,17 @@ public class TravelActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
+       // int id = item.getItemId();
+      
+        switch (item.getItemId()) {
+    	case R.id.compartir:
+    		Intent intent = new Intent();
+    		intent.setAction(Intent.ACTION_SEND);
+    		intent.putExtra(Intent.EXTRA_TEXT, "He estado en " + viaje_ciudad.getText() + "(" + viaje_pais.getText() + ") en el año " + viaje_anio.getText());
+    		intent.setType("text/plain");
+    		startActivity(intent);
+    	}
+        
         return super.onOptionsItemSelected(item);
     }
 }
