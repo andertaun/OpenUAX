@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Travel</string>
-    <string name="compartir">Share</string>
+    <string name="app_name">Travel List</string>
     
     <string name="title_activity_edit_travel">EditTravelActivity</string>
     <string name="title_activity_travel_list">TravelListActivity</string>
     
+
+       
+    <string name="action_settings">Settings</string>
+    <string name="compartir">Share</string>
     <string name="menu_new_travel">New travel</string>
+    
 
     <!-- Cadenas para los textos en pantalla de EditTravelActivity -->
     <string name="ciudad">City</string>

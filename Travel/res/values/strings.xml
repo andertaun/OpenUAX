@@ -26,6 +26,16 @@
     <string name="hint_anotacion">Aquí puedes escribir algún comentario sobre el viaje</string>
     <string name="boton_guardar">Guardar</string>
     
+    
+    <string name="nueva_visita">Nueva visita: </string>
+    
+    <string name="ciudad_vacia">El nombre de la ciudad no puede estar vacío</string>
+    <string name="anio_incorrecto">El año debe ser un número entre el 1900 y el actual</string>
+    
+    
+    
+    
+    
 <!-- Cadenas para los textos en pantalla de TravelActivity -->    
 
     <string name="abre_parentesis"> (</string>

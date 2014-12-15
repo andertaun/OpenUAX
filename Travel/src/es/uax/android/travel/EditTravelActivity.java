@@ -30,7 +30,11 @@
 
 package es.uax.android.travel;
 
+
+import java.util.Date;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,13 +66,62 @@ public class EditTravelActivity extends Activity {
 				editCountry = (EditText)findViewById(R.id.editPais);
 				editYear = (EditText)findViewById(R.id.editAnio);	
 				editAnnotation = (EditText)findViewById(R.id.editAnotacion);
+				
+				/*
+				 * Control de entrada de valores:
+				 * No podemos dejar sin rellenar los valores de Ciudad y Año. 
+				 * 
+				 * Control de entrada del año. Numérico de cuatro cifras mayor 1900 <= XXXX <= Año actual
+				 * 
+				 * 
+				 */
+				
+				//calculamos el año actual
+				Date horaActual = new Date();
+				int anioActual= horaActual.getYear() + 1900;
+				
+
+				
+				Boolean anioCorrecto = true;
+				int anioIntroducido = 0;
+				try {
+					anioIntroducido = Integer.parseInt(editYear.getText().toString());
+				} catch(NumberFormatException nfe) {
+					Toast.makeText(EditTravelActivity.this, getResources().getString(R.string.anio_incorrecto), Toast.LENGTH_SHORT).show();
+					anioCorrecto = false;
+				}
+				
+				if (anioCorrecto) {
+					anioCorrecto = (1900 <= anioIntroducido)  && (anioIntroducido <= anioActual);
+				}
+				
+				
 				String city = editCity.getText().toString();
 				String country = editCountry.getText().toString();
-				String year = editYear.getText().toString();
+				//String year = editYear.getText().toString();
+				String note = editAnnotation.getText().toString();
 				
 				
-				String texto = "Nueva visita: " + city + " (" + country + "), año: " + year + ".";
-				Toast.makeText(EditTravelActivity.this, texto, Toast.LENGTH_SHORT).show();
+				if (city.matches("")) {
+					Toast.makeText(EditTravelActivity.this, getResources().getString(R.string.ciudad_vacia), Toast.LENGTH_SHORT).show();
+				}else if (anioCorrecto ) {
+					String texto = getResources().getString(R.string.nueva_visita) + city + " (" + country + "), " + getResources().getString(R.string.anio) + anioIntroducido + ".";
+					System.out.println(texto);
+					Toast.makeText(EditTravelActivity.this, texto, Toast.LENGTH_SHORT).show();
+					//Devolvemos los resultados la activity que la llamó.
+					Intent intent = new Intent();
+					intent.putExtra("CIUDAD", city);
+					intent.putExtra("PAIS", country);
+					intent.putExtra("ANIO", anioIntroducido);
+					intent.putExtra("NOTA", note);
+					
+					setResult(RESULT_OK, intent);
+					
+					finish();
+				}else {
+					Toast.makeText(EditTravelActivity.this, R.string.anio_incorrecto, Toast.LENGTH_SHORT).show();
+				}
+				
 			}
 		});
 		

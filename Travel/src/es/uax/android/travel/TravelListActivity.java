@@ -2,9 +2,11 @@ package es.uax.android.travel;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Este ejemplo muestra el uso de una clase ListActivity que muestra una lista de paises visitados.
@@ -27,6 +30,8 @@ import android.widget.TextView;
 public class TravelListActivity extends ListActivity {
 	
 	private TravelAdapter adapter;
+	static final int NUEVO_VIAJE = 1;
+		
 	
 	private class TravelAdapter extends ArrayAdapter<TravelInfo>{
 		
@@ -88,7 +93,6 @@ public class TravelListActivity extends ListActivity {
 		intent.putExtra("COUNTRY", info.getCountry());
 		intent.putExtra("YEAR", info.getYear());
 
-		
 		startActivity(intent);
 		
 		super.onListItemClick(l, v, position, id);
@@ -119,16 +123,61 @@ public class TravelListActivity extends ListActivity {
     
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
     	
+    	
+    	
     	switch (item.getItemId()) {
     	case R.id.menu_new_travel:
     		Intent intent = new Intent(this, EditTravelActivity.class);
-    		startActivity(intent);
+    		startActivityForResult(intent, NUEVO_VIAJE);
+    		
     	}
     	
     	return super.onMenuItemSelected(featureId, item);
     }
     
+   /**
+    * Recuperamos la información del viaje creado en la otra activity para añadirlo al Array.
+    * 
+    * */
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	super.onActivityResult(requestCode, resultCode, data);
+    	
+    	if (requestCode == NUEVO_VIAJE) {
+ 
+    		if(resultCode == RESULT_OK) {
+    			System.out.println("Nuevo viaje creado correctamente");
+    			
+    			
+    			
+    			String city = data.getStringExtra("CIUDAD");
+    			String country = data.getStringExtra("PAIS");
+    			int year = data.getIntExtra("ANIO",0);
+    			String note = data.getStringExtra("NOTA");
+    		
+    			
+    			
+    			System.out.println("Ciudad:" + city + ": Pais:" + country + ": anio:" + year + ": nota:" + note);
+    			
+    			TravelInfo viaje_nuevo = new TravelInfo(city,country,year,note);
+    			
+    			adapter.add(viaje_nuevo);
+    			
+    			
+    			
+    		}
+    		
+    	}
+    		
+    		
+   	
+   } 
+
     
+   
+    
+    
+   
     //Generamos datos a mostrar
     //En una aplicacion funcional se tomarian de base de datos o algun otro medio
     private ArrayList<TravelInfo> getData(){
