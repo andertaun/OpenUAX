@@ -1,29 +1,9 @@
 /**
  * Ander Ortega Herrero.
- * 		Ejercicio: Unidad 3. Ejercicio Feedback 1.
+ * 		Ejercicio: Unidad 4. Ejercicio Feedback 1.
  * 		Asignatura: UAX 002 - Desarrollo para el sistema operativo Android.
  *  	Curso: MASTER UNIVERSITARIO EN INGENIERIA DE DESARROLLO PARA DISPOSITIVOS MOVILES.
  * 		OpenUAX. CURSO 2014-2015.
- * 
- * Vamos a crear una pequeña aplicación donde almacenar la información de
- * nuestros viajes. Por ahora vamos a guardar la ciudad, el país y el año de la visita,
- * y un campo para una anotación opcional. Debes diseñar e implementar dos
- * activities con los nombres TravelActivity y EditTravelActivity.
- * La primera de ellas debe mostrar la información de un viaje, especificando claramente
- * los datos especificados (ciudad, país y año). El disño queda en tus
- * manos, pero es requisito imprescindible que la interfaz escale correctamente en
- * dispositivos con distintos tamaño de pantalla y se adapte a cambios de orientación.
- * Para mostrar el funcionamiento de la Activity puedes poner datos fijos en
- * el método onCreate, por ejemplo: Kyoto (Japón), año 2012.
- * La segunda será un formulario para introducir la información de un viaje. Debe
- * tener cuatro EditText para ciudad, país, año y anotación; además de un botón
- * para guardar. No es necesario almacenar la información de ninguna forma. Al
- * pulsar el botón debe mostrarse una notificación Toast que muestre un texto
- * como el siguiente: "Nueva visita: <ciudad> (<país>), año: <año>".
- * Como todavía no hemos estudiado cómo lanzar activities en el código, te recomendamos
- * que para poder probar el ejercicio (y para su posterior corrección),
- * declares ambas activities con action MAIN y category LAUNCHER para poder
- * lanzarlas desde el menú de aplicaciones.
  * 
  */
 
@@ -36,6 +16,7 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +27,8 @@ import android.widget.Toast;
 
 public class EditTravelActivity extends Activity {
 	
+	public int position;
+	public boolean nuevo;
 	EditText editCity;	
 	EditText editCountry;
 	EditText editYear;	
@@ -56,8 +39,30 @@ public class EditTravelActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_edit_travel);
-				 
 		
+		final Bundle bundle = getIntent().getExtras();
+		nuevo = true;
+		if (bundle != null) {
+			Log.d("", "Bundle es distinto de null por lo que tendrá valores del intent (o de ");
+			position = bundle.getInt("POSITION");
+
+			editCity = (EditText)findViewById(R.id.editCiudad);	
+			editCity.setText(bundle.getString("CITY","desconocida"));
+			
+			editCountry = (EditText)findViewById(R.id.editPais);
+			editCountry.setText(bundle.getString("COUNTRY","desconocido"));
+			
+			editYear = (EditText)findViewById(R.id.editAnio);	
+			editYear.setText(String.valueOf(bundle.getInt("YEAR",2000)));
+		
+			editAnnotation = (EditText)findViewById(R.id.editAnotacion);
+			editAnnotation.setText(bundle.getString("NOTE",""));
+			
+			nuevo = false;
+
+		}
+		
+ 		
 		final Button boton = (Button) findViewById(R.id.botonGuardar);
 		boton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -67,6 +72,7 @@ public class EditTravelActivity extends Activity {
 				editYear = (EditText)findViewById(R.id.editAnio);	
 				editAnnotation = (EditText)findViewById(R.id.editAnotacion);
 				
+
 				/*
 				 * Control de entrada de valores:
 				 * No podemos dejar sin rellenar los valores de Ciudad y Año. 
@@ -79,8 +85,6 @@ public class EditTravelActivity extends Activity {
 				//calculamos el año actual
 				Date horaActual = new Date();
 				int anioActual= horaActual.getYear() + 1900;
-				
-
 				
 				Boolean anioCorrecto = true;
 				int anioIntroducido = 0;
@@ -105,19 +109,30 @@ public class EditTravelActivity extends Activity {
 				if (city.matches("")) {
 					Toast.makeText(EditTravelActivity.this, getResources().getString(R.string.ciudad_vacia), Toast.LENGTH_SHORT).show();
 				}else if (anioCorrecto ) {
-					String texto = getResources().getString(R.string.nueva_visita) + city + " (" + country + "), " + getResources().getString(R.string.anio) + anioIntroducido + ".";
-					System.out.println(texto);
-					Toast.makeText(EditTravelActivity.this, texto, Toast.LENGTH_SHORT).show();
-					//Devolvemos los resultados la activity que la llamó.
-					Intent intent = new Intent();
-					intent.putExtra("CIUDAD", city);
-					intent.putExtra("PAIS", country);
-					intent.putExtra("ANIO", anioIntroducido);
-					intent.putExtra("NOTA", note);
+						
+						
 					
-					setResult(RESULT_OK, intent);
+					//	String texto = getResources().getString(R.string.nueva_visita) + city + " (" + country + "), " + getResources().getString(R.string.anio) + anioIntroducido + ".";
+					//	System.out.println(texto);
+					//	Toast.makeText(EditTravelActivity.this, texto, Toast.LENGTH_SHORT).show();
 					
-					finish();
+						//Devolvemos los resultados la activity que la llamó.
+						Intent intent = new Intent();
+						intent.putExtra("CIUDAD", city);
+						intent.putExtra("PAIS", country);
+						intent.putExtra("ANIO", anioIntroducido);
+						intent.putExtra("NOTA", note);
+						
+						if (!nuevo) { // La variable "nuevo" nos dice si el viaje es creado nuevo (true)  o editado (false)
+							intent.putExtra("POSICION", position);
+						}
+						
+						setResult(RESULT_OK, intent);
+						
+						finish();
+
+				
+				
 				}else {
 					Toast.makeText(EditTravelActivity.this, R.string.anio_incorrecto, Toast.LENGTH_SHORT).show();
 				}
@@ -160,10 +175,10 @@ public class EditTravelActivity extends Activity {
 		String year = editYear.getText().toString();
 		String annotation = editAnnotation.getText().toString();
 		
-		outState.putString("ciudad", city);
-		outState.putString("pais", country);
-		outState.putString("anio", year);
-		outState.putString("nota", annotation);
+		outState.putString("CITY", city);
+		outState.putString("COUNTRY", country);
+		outState.putString("YEAR", year);
+		outState.putString("NOTE", annotation);
 		
 		super.onSaveInstanceState(outState);
 		
