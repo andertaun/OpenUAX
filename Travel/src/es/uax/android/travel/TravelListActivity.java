@@ -11,13 +11,18 @@ package es.uax.android.travel;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
+import es.uax.android.travel.data.TravelsConstants;
+import es.uax.android.travel.data.TravelsDatabaseHelper;
+
+
 import android.app.ListActivity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -27,7 +32,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -47,7 +51,10 @@ public class TravelListActivity extends ListActivity {
 	private TravelAdapter adapter;
 	static final int NUEVO_VIAJE = 1;
 	static final int EDITAR_VIAJE = 2;
-		
+	
+	private static TravelsDatabaseHelper dbHelper;
+	
+	
 	
 	private class TravelAdapter extends ArrayAdapter<TravelInfo>{
 		
@@ -89,8 +96,6 @@ public class TravelListActivity extends ListActivity {
 			holder.text1.setText(info.getCity() + " (" + info.getCountry() + ")");
 			holder.text2.setText(getResources().getString(R.string.anio) + " " + info.getYear());
 			
-	//		registerForContextMenu(view);
-			
 			return view;
 		}
 		
@@ -123,18 +128,25 @@ public class TravelListActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        /*
         //Generamos los datos
         ArrayList<TravelInfo> values = getData();
+        */
+        
+        dbHelper = new TravelsDatabaseHelper(this);
+        
+        //Obtenemos los datos de la base de datos
+        ArrayList<TravelInfo> values = dbHelper.getTravelsList();
         
         //Creamos el adapter y lo asociamos a la activity
         adapter = new TravelAdapter(this, values);
         
         setListAdapter(adapter);
+        
         registerForContextMenu(getListView());
-        
-        
     }
     
+  
     
     //Menú contextual (para cada viaje, con pulsación prolongada)
     @Override
@@ -150,21 +162,22 @@ public class TravelListActivity extends ListActivity {
     	super.onContextItemSelected(item);
     	AdapterView.AdapterContextMenuInfo info  = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     	
+    	 TravelInfo tv = adapter.getItem(info.position);   
+    	
     	switch (item.getItemId()) {
     	case R.id.edit_travel:
     		//Editamos el viaje pasando los datos como extras en el intent a la activity EditTravelActivity y esperamos los datos de vuelta
     		//(startActivityforResult)
-    	
-    	
-    	    TravelInfo tv = adapter.getItem(info.position);   
     	    	
 			Intent intent = new Intent(this, EditTravelActivity.class);
     		intent.putExtra( "CITY", tv.getCity());
     		intent.putExtra("COUNTRY", tv.getCountry());
     		intent.putExtra("YEAR", tv.getYear());
     		intent.putExtra("NOTE", tv.getNote());
-    		intent.putExtra("POSITION", info.position);
-
+    		//intent.putExtra("POSITION", info.position);
+    		intent.putExtra("POSITION",tv.getId());
+    		
+    		
     		startActivityForResult(intent, EDITAR_VIAJE);   	
     	
   		  		 		
@@ -174,7 +187,21 @@ public class TravelListActivity extends ListActivity {
     		return true;
     	case R.id.delete_travel:
     		//borramos el elemento de la lista.
-    		adapter.remove(adapter.getItem(  info.position  ));    // falta asignar la posición del elemento a borrar
+    		//	adapter.remove(adapter.getItem(  info.position  ));  
+    		
+    		//borramos el elemento de la base de datos y actualizamos la vista del adapter
+    		SQLiteDatabase db = dbHelper.getWritableDatabase();   		
+    		
+    		String where = "_ID=" + String.valueOf(tv.getId());
+    		
+    		db.delete(TravelsConstants.TRAVELS_TABLE_NAME, where, null);
+    		
+    		
+	        //Obtenemos los datos de la base de datos
+	        ArrayList<TravelInfo> values = dbHelper.getTravelsList();
+	        //Creamos el adapter y lo asociamos a la activity
+	        adapter = new TravelAdapter(this, values);
+			setListAdapter(adapter); 
     		
     		
     		Toast.makeText(TravelListActivity.this, "Borrado el elemento  " + info.position, Toast.LENGTH_SHORT).show();
@@ -217,8 +244,10 @@ public class TravelListActivity extends ListActivity {
     	String note;
     	int position;
     	
-    	TravelInfo travel;
-  
+ //   	TravelInfo travel;
+    	
+    	
+    	
 //     	Fragmento de código optimizado    	
     	if (resultCode == RESULT_OK) {
     		city = data.getStringExtra("CIUDAD");
@@ -226,19 +255,68 @@ public class TravelListActivity extends ListActivity {
 			year = data.getIntExtra("ANIO",0);
 			note = data.getStringExtra("NOTA");
   
-			
+			/*
 			travel = new TravelInfo(city,country,year,note);
 			adapter.add(travel);
+			*/
+			SQLiteDatabase db = dbHelper.getWritableDatabase();
 			
 			switch (requestCode) {
 			case NUEVO_VIAJE:
-				System.out.println("Nuevo viaje creado correctamente");
+
+				if (db != null) {
+					//Insertamos el elemento en la base de datos y actualizamos la vista del adapter
+					System.out.println("base de datos: " + dbHelper.getDatabaseName());
+					dbHelper.insertTravel(db, city, country, year, note);
+				
+					
+			        //Obtenemos los datos de la base de datos
+			        ArrayList<TravelInfo> values = dbHelper.getTravelsList();
+			        //Creamos el adapter y lo asociamos a la activity
+			        adapter = new TravelAdapter(this, values);
+					setListAdapter(adapter); 
+					
+					
+					System.out.println("Nuevo viaje creado correctamente");
+				} else {
+					System.out.println("Error, base de datos no disponible");
+				}
+
 				break;
 			case EDITAR_VIAJE:
 				position = data.getIntExtra("POSICION", adapter.getCount());
-       			adapter.remove(adapter.getItem(position));
+       	//		adapter.remove(adapter.getItem(position));
+    	//		adapter.add(travel);		
+				
+				if(db != null) {
+					System.out.println("base de datos: " + dbHelper.getDatabaseName());
+
+					ContentValues valores = new ContentValues();
+					valores.put(TravelsConstants.CITY, city);
+					valores.put(TravelsConstants.COUNTRY, country);
+					valores.put(TravelsConstants.YEAR, year);
+					valores.put(TravelsConstants.NOTE, note);
+					
+					String where ="_ID=" + position;
+					
+					db.update(TravelsConstants.TRAVELS_TABLE_NAME, valores, where, null);
+					
+					
+					
+			        //Obtenemos los datos de la base de datos
+			        ArrayList<TravelInfo> values = dbHelper.getTravelsList();
+			        //Creamos el adapter y lo asociamos a la activity
+			        adapter = new TravelAdapter(this, values);
+					setListAdapter(adapter); 
+					
+					
+					System.out.println("Viaje editado correctamente");
+				}else {
+					System.out.println("Error, base de datos no disponible");
+				}
+				
+				
     			
-    			System.out.println("Viaje editado correctamente");
 				break;
 			}	
     	}
@@ -287,7 +365,8 @@ public class TravelListActivity extends ListActivity {
    } 
 
     
-    
+ /* Deprecated
+  
     //Generamos datos a mostrar
     //En una aplicacion funcional se tomarian de base de datos o algun otro medio
     private ArrayList<TravelInfo> getData(){
@@ -307,5 +386,5 @@ public class TravelListActivity extends ListActivity {
        
         return travels;
     }
-
+*/
 }

@@ -8,22 +8,30 @@ package es.uax.android.travel;
  */
 public class TravelInfo {
 
+	private int id;
+	
 	private String city;
 	private String country;
 	private int year;
 	private String note;
 	
 	
-	public TravelInfo(String city, String country, int year, String note){
+	public TravelInfo(int id, String city, String country, int year, String note){
+		this.id = id;
 		this.city = city;
 		this.country = country;
 		this.year = year;
 		this.note = note;
 	}
 	
-	public TravelInfo(String city, String country, int year){
-		this(city, country, year, null);
+	public TravelInfo(int id, String city, String country, int year){
+		this(id, city, country, year, null);
 	}
+	
+	public int getId() {
+		return id;
+	}
+	
 	
 	public String getCity() {
 		return city;
